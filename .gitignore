@@ -39,6 +39,28 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
+.idea/
+*.iml
+
+# Gradle
+.gradle/
+build/
+out/
+
+# Kotlin/Java
+*.class
+
+# OS junk
+.DS_Store
+
+# Logs
+*.log
+
+# Uploads
+uploads/
+
+# Temp
+*.tmp
 .idea
 *.iws
 *.iml
@@ -56,4 +78,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
