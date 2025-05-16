@@ -17,13 +17,15 @@ class FileController(
         return ResponseEntity.ok("File Storing Service is running")
     }
 
+    // Uploads a file and returns its id
     @PostMapping("/upload", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun upload(@RequestParam("file") file: MultipartFile): ResponseEntity<String> {
-        val filename = fileStorageService.store(file)
-        return ResponseEntity.ok("Uploaded: $filename")
+        val file_id = fileStorageService.store(file)
+        return ResponseEntity.ok("Uploaded file, ID: $file_id")
     }
 
-    @GetMapping("/{id}", produces = [MediaType.TEXT_PLAIN_VALUE])
+    // Returns text of the file by file id
+    @GetMapping("/text/{id}", produces = [MediaType.TEXT_PLAIN_VALUE])
     fun download(@PathVariable id: ULong): ResponseEntity<String> {
         val resource = fileStorageService.load(id)
 
@@ -32,5 +34,12 @@ class FileController(
         return ResponseEntity.ok()
             .contentType(MediaType.TEXT_PLAIN)
             .body(content)
+    }
+
+    // Returns file metadata by file id
+    @GetMapping("/info/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun fileInfo(@PathVariable id: ULong): ResponseEntity<String> {
+        val fileMeta = fileStorageService.fileInfo(id)
+        return ResponseEntity.ok(fileMeta.toString())
     }
 }

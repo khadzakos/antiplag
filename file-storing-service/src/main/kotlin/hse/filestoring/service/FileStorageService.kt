@@ -29,11 +29,13 @@ class FileStorageService(
 
     fun store(file: MultipartFile): ULong {
         val filename = file.originalFilename
-        var path = Paths.get(uploadDir).resolve(filename)
+        // удалить из названия .txt
+        val fileNameWithoutExtension = filename?.substringBeforeLast(".") ?: throw IllegalArgumentException("Filename is null")
+        var path = Paths.get(uploadDir).resolve(fileNameWithoutExtension + ".txt")
         file.transferTo(path)
         logger.info("File stored at: $path")
 
-        val meta = FileMeta(filename = filename, path = path.toString(), file_size = file.size)
+        val meta = FileMeta(filename = fileNameWithoutExtension, path = path.toString(), file_size = file.size)
         meta.setHash(hashService.hash(file.bytes))
         repository.save(meta)
 
@@ -49,5 +51,20 @@ class FileStorageService(
         val path = Path(fileMeta.storage_path)
         logger.info("Loading file from path: $path")
         return UrlResource(path.toUri())
+    }
+
+    fun fileInfo(file_id: ULong): String {
+        val fileMeta = repository.findById(file_id.toLong())
+            .orElseThrow { RuntimeException("File not found") }
+
+        val responseMeta = """
+            {
+                "id": ${fileMeta.id},
+                "originalName": "${fileMeta.originalName}",
+                "sizeBytes": ${fileMeta.sizeBytes},
+                "hashCode": "${fileMeta.hashCode}"
+            }
+        """.trimIndent()
+        return responseMeta
     }
 }

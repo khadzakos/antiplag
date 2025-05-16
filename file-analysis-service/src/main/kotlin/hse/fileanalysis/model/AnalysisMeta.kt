@@ -17,7 +17,7 @@ class AnalysisMeta (
     var numOfWords: Long,
     var numOfParagraphs: Long,
     var wordCloudPath: String,
-    val uploadTimestamp: LocalDateTime = LocalDateTime.now(),
+    val analysisTimestamp: LocalDateTime = LocalDateTime.now(),
 
 ) {
     constructor() : this(0, 0, "", 0, "", -1, 1, -1, "")
