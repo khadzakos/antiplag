@@ -21,7 +21,12 @@ dependencies {
 
     // Для работы с базой данных (если будешь использовать)
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.postgresql:postgresql:42.7.2")
+    implementation("org.postgresql:postgresql:42.7.3")
+
+    // Миграции
+    implementation("org.flywaydb:flyway-core:11.8.0")
+    implementation("org.flywaydb:flyway-database-postgresql:11.8.0")
+
 
     // Kotlin стандартные библиотеки
     implementation(kotlin("stdlib"))
