@@ -5,7 +5,6 @@ import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/analyze")
@@ -17,13 +16,13 @@ class AnalysisConroller (
         return ResponseEntity.ok("File Analysis Service is running")
     }
 
-    @PostMapping("/{id}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun analyze(@RequestParam("file") file: MultipartFile): ResponseEntity<String> {
-        val analysisResult = fileAnalysisService.analyze(file)
-        return ResponseEntity.ok(analysisResult)
+    @PostMapping("/{id}")
+    fun analyze(@PathVariable id: ULong): ResponseEntity<String> {
+        val result = fileAnalysisService.analyze(id)
+        return ResponseEntity.ok(result)
     }
 
-    @GetMapping("/cloud/{location}", produces = [MediaType.IMAGE_PNG_VALUE)
+    @GetMapping("/cloud/{location}", produces = [MediaType.IMAGE_PNG_VALUE])
     fun download(@PathVariable location: String): ResponseEntity<Resource> {
         val resource = fileAnalysisService.download(location)
         return ResponseEntity.ok()
