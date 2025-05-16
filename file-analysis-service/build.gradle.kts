@@ -3,8 +3,6 @@ plugins {
     kotlin("plugin.spring") version "1.9.23"
     id("org.springframework.boot") version "3.2.5"
     id("io.spring.dependency-management") version "1.1.4"
-    kotlin("plugin.lombok") version "1.8.10"
-    id("io.freefair.lombok") version "5.3.0"
     application
 }
 
@@ -37,7 +35,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("hse.filestoring.FileStoringServiceApplicationKt")
+    mainClass.set("hse.fileanalysis.FileAnalysisServiceApplicationKt")
 }
 
 kotlin {

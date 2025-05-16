@@ -1,0 +1,20 @@
+server:
+  port: 8082
+
+spring:
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/analysis_info
+    username: postgres # default username for PostgreSQL - change as needed
+    password: postgres # default password for PostgreSQL - change as needed
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+storage:
+  path: pics
