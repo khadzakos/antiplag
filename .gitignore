@@ -59,6 +59,9 @@ out/
 # Uploads
 uploads/
 
+#Pics
+pics/
+
 # Temp
 *.tmp
 .idea

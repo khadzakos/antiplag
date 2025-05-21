@@ -8,13 +8,13 @@ import org.springframework.web.client.RestTemplate
 class FileStorageClient(private val restTemplate: RestTemplate) {
 
     fun loadText(fileId: ULong): String {
-        val textUrl = "http://localhost:8081/files/text/$fileId"
+        val textUrl = "http://file-storing-service:8081/files/text/$fileId"
         return restTemplate.getForObject(textUrl, String::class.java)
             ?: throw RuntimeException("Failed to get file")
     }
 
     fun loadInfo(fileId: ULong): FileMetaDto {
-        val metaUrl = "http://localhost:8081/files/info/$fileId"
+        val metaUrl = "http://file-storing-service:8081/files/info/$fileId"
 
         return restTemplate.getForObject(metaUrl, FileMetaDto::class.java)
             ?: throw RuntimeException("Failed to get file")

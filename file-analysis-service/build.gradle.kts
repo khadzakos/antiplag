@@ -25,6 +25,8 @@ dependencies {
     implementation("org.flywaydb:flyway-core:11.8.0")
     implementation("org.flywaydb:flyway-database-postgresql:11.8.0")
 
+    // Для Swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
     // Kotlin стандартные библиотеки
     implementation(kotlin("stdlib"))

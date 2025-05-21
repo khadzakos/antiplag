@@ -1,2 +1,10 @@
 server:
   port: 8080
+
+springdoc:
+  swagger-ui:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  webmvc:
+    enabled: true

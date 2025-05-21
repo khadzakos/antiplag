@@ -2,9 +2,8 @@ server:
   port: 8082
 
 spring:
-
   datasource:
-    url: jdbc:postgresql://localhost:5432/analysis_info
+    url: jdbc:postgresql://db-analysis:5432/analysis_info
     username: postgres # default username for PostgreSQL - change as needed
     password: postgres # default password for PostgreSQL - change as needed
   flyway:
@@ -18,3 +17,12 @@ spring:
 
 storage:
   path: pics
+
+springdoc:
+  swagger-ui:
+  api-docs:
+    path: /v3/api-docs
+  info:
+    title: File Analysis Service API
+    version: 1.0.0
+    description: API сервиса анализа текстовых файлов.

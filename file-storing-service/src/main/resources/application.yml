@@ -2,9 +2,8 @@ server:
   port: 8081
 
 spring:
-
   datasource:
-    url: jdbc:postgresql://localhost:5432/file_info
+    url: jdbc:postgresql://db-storing:5432/file_info
     username: postgres # default username for PostgreSQL - change as needed
     password: postgres # default password for PostgreSQL - change as needed
   flyway:
@@ -18,3 +17,12 @@ spring:
 
 storage:
   path: uploads
+
+springdoc:
+  swagger-ui:
+  api-docs:
+    path: /v3/api-docs
+  info:
+    title: File Storing Service API
+    version: 1.0.0
+    description: API сервиса управления текстовыми файлами.

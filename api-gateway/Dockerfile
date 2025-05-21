@@ -1,3 +1,4 @@
+# --- Стадия 1: Сборка приложения ---
 FROM openjdk:21-jdk-slim AS builder
 
 WORKDIR /app
@@ -19,6 +20,6 @@ FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 
-COPY --from=builder /app/build/libs/file-storing-service-1.0-SNAPSHOT.jar ./app.jar
+COPY --from=builder /app/build/libs/api-gateway-1.0-SNAPSHOT.jar ./app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
