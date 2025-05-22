@@ -47,6 +47,9 @@ class FileController(
     @PostMapping("/upload", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun upload(@RequestParam("file") file: MultipartFile): ResponseEntity<String> {
         val file_id = fileStorageService.store(file)
+        if (file_id == ULong.MAX_VALUE) {
+            return ResponseEntity.status(400).body("File already exists")
+        }
         return ResponseEntity.ok("Uploaded file, ID: $file_id")
     }
 

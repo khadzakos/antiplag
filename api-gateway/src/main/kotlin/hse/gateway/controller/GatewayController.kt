@@ -55,6 +55,25 @@ class GatewayController(
         return ResponseEntity.status(response.statusCode).body(response.body)
     }
 
+    @Operation(summary = "Получает текст файла",
+        parameters = [
+            Parameter(name = "id", description = "ID файла", required = true)
+        ],
+        responses = [
+            ApiResponse(responseCode = "200", description = "Текст файла успешно получен"),
+            ApiResponse(responseCode = "400", description = "Ошибка при получении текста файла"),
+            ApiResponse(
+                responseCode = "500",
+                description = "Ошибка сервера"
+            )
+        ]
+    )
+    @GetMapping("/{id}")
+    fun getFileText(@PathVariable id: Long): ResponseEntity<String> {
+        val response = restTemplate.getForEntity("$fileService/files//text/$id", String::class.java)
+        return ResponseEntity.status(response.statusCode).body(response.body)
+    }
+
     @Operation(summary = "Анализирует файл",
         parameters = [
             Parameter(name = "id", description = "ID файла", required = true)
