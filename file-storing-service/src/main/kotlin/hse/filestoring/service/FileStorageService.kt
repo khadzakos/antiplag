@@ -29,13 +29,19 @@ class FileStorageService(
 
     fun store(file: MultipartFile): ULong {
         val filename = file.originalFilename
-        // удалить из названия .txt
         val fileNameWithoutExtension = filename?.substringBeforeLast(".") ?: throw IllegalArgumentException("Filename is null")
         var path = Paths.get(uploadDir).resolve(fileNameWithoutExtension + ".txt")
+        if (Files.exists(path)) {
+            return ULong.MAX_VALUE
+        }
         file.transferTo(path)
         logger.info("File stored at: $path")
 
         val meta = FileMeta(filename = fileNameWithoutExtension, path = path.toString(), file_size = file.size)
+        if (repository.existsById(meta.id)) {
+            logger.warn("File with ID ${meta.id} already exists")
+            return ULong.MAX_VALUE
+        }
         meta.setHash(hashService.hash(file.bytes))
         repository.save(meta)
 

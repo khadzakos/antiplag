@@ -1,10 +1,12 @@
 package hse.fileanalysis.controller
 
 import hse.fileanalysis.service.FileAnalysisService
+import hse.fileanalysis.controller.dto.ErrorResponse
 import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.http.HttpStatus
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -27,7 +29,7 @@ class AnalysisConroller (
             ApiResponse(responseCode = "500", description = "Сервис не работает")
         ]
     )
-    @GetMapping("/")
+    @GetMapping("/health")
     fun healthCheck(): ResponseEntity<String> {
         return ResponseEntity.ok("File Analysis Service is running")
     }
@@ -50,9 +52,21 @@ class AnalysisConroller (
         ]
     )
     @PostMapping("/{id}")
-    fun analyze(@PathVariable id: ULong): ResponseEntity<String> {
-        val result = fileAnalysisService.analyze(id)
-        return ResponseEntity.ok(result)
+    fun analyze(@PathVariable id: ULong): ResponseEntity<Any> {
+        try {
+            val result = fileAnalysisService.analyze(id)
+            return ResponseEntity.ok(result)
+        } catch (e: Exception) {
+            val errorResponse = ErrorResponse(
+                timestamp = java.time.Instant.now().toString(),
+                status = HttpStatus.BAD_REQUEST.value(),
+                error = HttpStatus.BAD_REQUEST.reasonPhrase,
+                message = "File analysis failed: check if the file exists"
+            )
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(errorResponse)
+        }
     }
 
     @Operation(
