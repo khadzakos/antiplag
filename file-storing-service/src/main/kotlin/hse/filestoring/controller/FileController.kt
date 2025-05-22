@@ -1,6 +1,7 @@
 package hse.filestoring.controller
 
 import hse.filestoring.service.FileStorageService
+import hse.filestoring.controller.dto.ErrorResponse
 import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -45,12 +46,24 @@ class FileController(
         ]
     )
     @PostMapping("/upload", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun upload(@RequestParam("file") file: MultipartFile): ResponseEntity<String> {
-        val file_id = fileStorageService.store(file)
-        if (file_id == ULong.MAX_VALUE) {
-            return ResponseEntity.status(400).body("File already exists")
+    fun upload(@RequestParam("file") file: MultipartFile): ResponseEntity<*> {
+        try {
+            val file_id = fileStorageService.store(file)
+            if (file_id == ULong.MAX_VALUE) {
+                return ResponseEntity.status(400).body("File already exists")
+            }
+            return ResponseEntity.ok("Uploaded file, ID: $file_id")
+        } catch (e: Exception) {
+            val errorResponse = ErrorResponse(
+                timestamp = java.time.Instant.now().toString(),
+                status = 400,
+                error = "Bad Request",
+                message = "Error uploading file or file already exists"
+            )
+            return ResponseEntity.status(400)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(errorResponse)
         }
-        return ResponseEntity.ok("Uploaded file, ID: $file_id")
     }
 
     @Operation(
@@ -68,14 +81,26 @@ class FileController(
         ]
     )
     @GetMapping("/text/{id}", produces = [MediaType.TEXT_PLAIN_VALUE])
-    fun download(@PathVariable id: ULong): ResponseEntity<String> {
-        val resource = fileStorageService.load(id)
+    fun download(@PathVariable id: ULong): ResponseEntity<*> {
+        try {
+            val resource = fileStorageService.load(id)
 
-        val content = resource.inputStream.bufferedReader().use { it.readText() }
+            val content = resource.inputStream.bufferedReader().use { it.readText() }
 
-        return ResponseEntity.ok()
-            .contentType(MediaType.TEXT_PLAIN)
-            .body(content)
+            return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(content)
+        } catch (e: Exception) {
+            val errorResponse = ErrorResponse(
+                timestamp = java.time.Instant.now().toString(),
+                status = 400,
+                error = "Bad Request",
+                message = "File not found"
+            )
+            return ResponseEntity.status(400)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(errorResponse)
+        }
     }
 
     @Operation(
@@ -93,8 +118,20 @@ class FileController(
         ]
     )
     @GetMapping("/info/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun fileInfo(@PathVariable id: ULong): ResponseEntity<String> {
-        val fileMeta = fileStorageService.fileInfo(id)
-        return ResponseEntity.ok(fileMeta.toString())
+    fun fileInfo(@PathVariable id: ULong): ResponseEntity<*> {
+        try {
+            val fileMeta = fileStorageService.fileInfo(id)
+            return ResponseEntity.ok(fileMeta.toString())
+        } catch (e: Exception) {
+            val errorResponse = ErrorResponse(
+                timestamp = java.time.Instant.now().toString(),
+                status = 400,
+                error = "Bad Request",
+                message = "File not found"
+            )
+            return ResponseEntity.status(400)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(errorResponse)
+        }
     }
 }
